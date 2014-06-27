@@ -1,0 +1,39 @@
+# Кодировка по умолчанию
+AddDefaultCharset UTF-8
+
+ErrorDocument 401 /errors/401.html
+ErrorDocument 403 /errors/403.html
+ErrorDocument 404 /errors/404.html
+ErrorDocument 500 /errors/500.html
+
+# Файлы, к которым запрщено обращаться напрямую
+<Files ~ "((readme\.txt)|(\.(htaccess|sql|php)))$">
+	Order deny,allow
+	Deny from all
+</Files>
+<Files "index.php">
+	Allow from all
+</Files>
+<Files "stat.php">
+	Allow from all
+</Files>
+<Files "rss.php">
+	Allow from all
+</Files>
+<Files "backup.php">
+	Allow from all
+</Files>
+
+
+RewriteEngine On
+RewriteBase /
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-l
+
+RewriteRule ^(.+)$ index.php?url=$1 [QSA,L]
+
+# Если mod_rewrite отключен, то устанвливаем index файл
+<IfDefine !RewriteEngine>
+	DirectoryIndex index.php
+</IfDefine>
